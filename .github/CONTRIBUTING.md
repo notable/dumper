@@ -20,7 +20,7 @@ In order to implement a new provider you'll need to:
 
 #### Learn how a provider works
 
-Take a look at existing [providers](//TODO) first. Overall they are relatively straightforward, each of them is usually divided into 3 classes:
+Take a look at existing [providers](https://github.com/notable/dumper/tree/master/src/providers) first. Overall they are relatively straightforward, each of them is usually divided into 3 classes:
 
 - The `Provider` class generally defines some metadata, the `name` of the provided and the supported `extensions`, and if each supported source file needs some special processing or may contain multiple notes you'll have to implement the `getNotesRaw` method too, which provides the objects that will be passed to the `Note` class.
 - The `Note` class generally implements a method for retrieving the metadata of a note, `getMetadata`, and a method for retrieving its content, `getContent`. If you need to format its content or convert it to Markdown you should implement the `formatContent` method too.
@@ -29,13 +29,13 @@ Take a look at existing [providers](//TODO) first. Overall they are relatively s
 Some additional tips:
 
 - If you need some provider-specific utilities just define them as methods of the relevant classes.
-- If you need some more general utilities you should define them in [`utils.ts`](//TODO), so that they can be used by other providers too.
+- If you need some more general utilities you should define them in [`utils.ts`](https://github.com/notable/dumper/blob/master/src/utils.ts), so that they can be used by other providers too.
 - It's important to maintain the dependency tree, visible by running the `npm list -prod` command, as short and lightweight possible.
   - Think if you really need to add a new dependency, perhaps you can just implement a few functions yourself.
   - Think if you can reuse existing dependencies rather than introducting new ones.
   - Think if the dependency you're introducting is the most lightweight available.
 
-Once your new provider is implemented just add it to the list of supported providers, [here](//TODO), and write some tests for it.
+Once your new provider is implemented just add it to the list of supported providers, [here](https://github.com/notable/dumper/blob/a3829f748e729043b3cdb1c887b394ad4124071a/src/index.ts#L12), and write some tests for it.
 
 #### Learn how tests works
 
