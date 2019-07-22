@@ -1,0 +1,14 @@
+{
+  "title": "Title",
+  "tags": [
+    "Foo"
+  ],
+  "attachments": [
+    "d1cbe242.png"
+  ],
+  "deleted": true,
+  "favorited": true,
+  "pinned": false,
+  "created": "[VALID_DATE]",
+  "modified": "[VALID_DATE]"
+}
