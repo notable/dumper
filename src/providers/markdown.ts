@@ -15,7 +15,7 @@ type AttachmentRaw = undefined;
 class MarkdownProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
 
   name = 'Markdown';
-  extensions = ['.md', '.mkd', '.mdwn', '.mdown', '.markdown', '.markdn', '.mdtxt', '.mdtext', '.txt'];
+  extensions = ['.md', '.mkd', '.mkdn', '.mdwn', '.mdown', '.markdown', '.markdn', '.mdtxt', '.mdtext', '.txt'];
 
 }
 

@@ -25,7 +25,7 @@ The following providers are currently implemented:
 - **HMTL**: it can import HTML notes, most popular note-taking apps can export to HTML.
   - **Extensions**: `.html`, `.htm`.
 - **Markdown**: it can import plain Markdown notes.
-  - **Extensions**: `.md`, `.mkd`, `.mdwn`, `.mdown`, `.markdown`, `.markdn`, `.mdtxt`, `.mdtext`, `.txt`.
+  - **Extensions**: `.md`, `.mkd`, `.mkdn`, `.mdwn`, `.mdown`, `.markdown`, `.markdn`, `.mdtxt`, `.mdtext`, `.txt`.
 
 ## Usage
 
