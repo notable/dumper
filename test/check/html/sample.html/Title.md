@@ -54,6 +54,8 @@ _Italic (Alt2)_
 
 <mark>Highlighted</mark>
 
+Subscript~example~
+
 `Code`
 
 ```

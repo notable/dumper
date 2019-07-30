@@ -35,6 +35,13 @@ function html2markdown ( html: string, options?: Options ): string {
     }
   });
 
+  service.addRule ( 'subscript', {
+    filter: ['sub'],
+    replacement: str => {
+      return `~${str}~`;
+    }
+  });
+
   service.addRule ( 'alignment', {
     filter: node => node.nodeName !== 'TABLE' && ( node.getAttribute ( 'style' ) || '' ).includes ( 'text-align:' ),
     replacement: ( str, ele: HTMLElement ) => {
