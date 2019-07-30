@@ -56,6 +56,8 @@ _Italic (Alt2)_
 
 Subscript~example~
 
+Superscript^example^
+
 `Code`
 
 ```
