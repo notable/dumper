@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import * as CSON from 'cson-parser';
+import cson2json from 'cson2json';
 import * as path from 'path';
 import matchesAll from 'string-matches';
 import {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../types';
@@ -22,7 +22,7 @@ class BoostnoteProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
 
   getNotesRaw ( content: Content ): NoteRaw[] {
 
-    return [CSON.parse ( content.toString () )];
+    return [cson2json ( content.toString () )];
 
   }
 

@@ -36,7 +36,7 @@
     "attachments"
   ],
   "dependencies": {
-    "cson-parser": "^4.0.2",
+    "cson2json": "^1.0.0",
     "entities": "^1.1.2",
     "fast-xml-parser": "3.12.19",
     "filenamify": "^4.1.0",
