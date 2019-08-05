@@ -6,6 +6,7 @@ const argv = require ( 'minimist' )( process.argv.slice ( 2 ) ),
       filenamify = require ( 'filenamify' ),
       fs = require ( 'fs' ),
       mkdirp = require ( 'mkdirp' ),
+      minidom = require ( 'minidom' ),
       path = require ( 'path' ),
       {default: Dumper} = require ( '../dist' );
 
@@ -15,10 +16,19 @@ const OUTPUT = path.join ( __dirname, 'output' ),
       SOURCE = path.join ( __dirname, 'source' ),
       CHECK = path.join ( __dirname, 'check' );
 
+/* DOM PARSER */
+
+class DOMParser {
+  parseFromString ( str ) {
+    return minidom ( str );
+  }
+}
+
 /* MAKE */
 
 function make ( source ) {
   return Dumper.dump ({
+    DOMParser,
     source: path.join ( SOURCE, source ),
     dump ( note ) {
       function replaceDates ( obj ) { // They make the tests harder to pass unnecessarily

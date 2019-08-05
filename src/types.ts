@@ -6,6 +6,10 @@ import {Class, Promisable} from 'type-fest';
 
 /* TYPES */
 
+type DOMParser = Class<{
+  parseFromString ( str: string, mimeType: string ): Document
+}>;
+
 type Attachment = {
   metadata: AttachmentMetadata,
   content: Content
@@ -45,10 +49,11 @@ type SourceDetails = {
 type Content = Buffer;
 
 type Options = {
+  DOMParser?: DOMParser,
   source: Source | Source[],
   dump: Dump
 };
 
 /* EXPORT */
 
-export {Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Class, Content, Stats, Options};
+export {DOMParser, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Class, Content, Stats, Options};

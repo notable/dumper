@@ -513,40 +513,10 @@ var root = (typeof window !== 'undefined' ? window : {});
  * Parsing HTML strings
  */
 
-function canParseHTMLNatively () {
-  var Parser = root.DOMParser;
-  var canParse = false;
-
-  // Adapted from https://gist.github.com/1129031
-  // Firefox/Opera/IE throw errors on unsupported types
-  try {
-    // WebKit returns null on unsupported types
-    if (new Parser().parseFromString('', 'text/html')) {
-      canParse = true;
-    }
-  } catch (e) {}
-
-  return canParse
-}
-
-function createHTMLParser () {
-  var Parser = function () {};
-
-  {
-    var minidom = require('minidom');
-    Parser.prototype.parseFromString = function (string) {
-      return minidom(string)
-    };
-  }
-  return Parser
-}
-
-var HTMLParser = canParseHTMLNatively() ? root.DOMParser : createHTMLParser();
-
-function RootNode (input) {
+function RootNode (input, options) {
   var root;
   if (typeof input === 'string') {
-    var doc = htmlParser().parseFromString(
+    var doc = htmlParser(options).parseFromString(
       // DOM parsers arrange elements in the <head> and <body>.
       // Wrapping in a custom element ensures elements are reliably arranged in
       // a single element.
@@ -567,8 +537,8 @@ function RootNode (input) {
 }
 
 var _htmlParser;
-function htmlParser () {
-  _htmlParser = _htmlParser || new HTMLParser();
+function htmlParser (options) {
+  _htmlParser = _htmlParser || new options.parser();
   return _htmlParser
 }
 
@@ -673,7 +643,8 @@ function TurndownService (options) {
     },
     defaultReplacement: function (content, node) {
       return node.isBlock ? '\n\n' + content + '\n\n' : content
-    }
+    },
+    parser: root.DOMParser
   };
   this.options = extend({}, defaults, options);
   this.rules = new Rules(this.options);
@@ -697,7 +668,7 @@ TurndownService.prototype = {
 
     if (input === '') return ''
 
-    var output = process.call(this, new RootNode(input));
+    var output = process.call(this, new RootNode(input, this.options));
     return postProcess.call(this, output)
   },
 

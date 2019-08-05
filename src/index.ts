@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import {Source, Options} from './types';
+import Config from './config';
 import {Boostnote, Enex, HTML, Markdown} from './providers';
 import Utils from './utils';
 
@@ -23,6 +24,8 @@ const Dumper = {
   },
 
   async dump ( options: Options ): Promise<void> {
+
+    if ( options.DOMParser ) Config.html2markdown.options['parser'] = options.DOMParser;
 
     const sources = Utils.lang.castArray ( options.source ),
           sourcesUnsupported = sources.filter ( source => !Dumper.isSupported ( source ) );

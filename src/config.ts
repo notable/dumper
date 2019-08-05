@@ -21,7 +21,8 @@ const Config = {
       headingStyle: 'atx',
       hr: '---',
       linkStyle: 'inlined',
-      strongDelimiter: '**'
+      strongDelimiter: '**',
+      parser: undefined // Defaults to window.DOMParser
     } as TurndownOptions
   }
 };
