@@ -38,6 +38,7 @@ interface Dumper {
 }
 
 interface Options {
+  DOMParser?: DOMParser,
   source: string | string[],
   dump ( note: Note ): void | Promise<void>
 }
