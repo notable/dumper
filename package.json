@@ -1,7 +1,7 @@
 {
   "name": "@notable/dumper",
   "description": "Library for extracting attachments, notes and metadata out of formats used by popular note-taking apps.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "dist/index.js",
   "files": [
     "dist",
