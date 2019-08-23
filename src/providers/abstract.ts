@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import * as entities from 'entities';
+import decode from 'html-entities-decode';
 import {Promisable} from 'type-fest';
 import {Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Class, Content, Source, SourceDetails} from '../types';
 import Config from '../config';
@@ -101,7 +101,7 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
           titleFallback = details.filePath ? Utils.path.sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
 
     return {
-      title: metadata.title ? Utils.path.sanitize ( entities.decodeHTML ( metadata.title ).trim () ) || titleFallback : titleFallback,
+      title: metadata.title ? Utils.path.sanitize ( decode ( metadata.title ).trim () ) || titleFallback : titleFallback,
       tags: metadata.tags ? metadata.tags.map ( tag => tag.trim () ).filter ( tag => tag ) : [],
       attachments: metadata.attachments ? metadata.attachments.map ( attachment => {
         attachment.metadata.created = Utils.lang.isDateValid ( attachment.metadata.created ) ? attachment.metadata.created : created;

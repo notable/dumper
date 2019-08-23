@@ -37,9 +37,9 @@
   ],
   "dependencies": {
     "cson2json": "^1.0.0",
-    "entities": "^1.1.2",
     "fast-xml-parser": "3.12.19",
     "filenamify": "^4.1.0",
+    "html-entities-decode": "^1.0.0",
     "string-matches": "^1.1.3",
     "type-fest": "^0.6.0"
   },
@@ -47,7 +47,6 @@
     "minidom": "1.0.0"
   },
   "devDependencies": {
-    "@types/entities": "^1.1.1",
     "@types/node": "^12.6.8",
     "@types/turndown": "^5.0.0",
     "minidom": "^1.0.0",
