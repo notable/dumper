@@ -3,7 +3,6 @@
 
 const argv = require ( 'minimist' )( process.argv.slice ( 2 ) ),
       diff = require ( 'test-diff' )
-      filenamify = require ( 'filenamify' ),
       fs = require ( 'fs' ),
       mkdirp = require ( 'mkdirp' ),
       minidom = require ( 'minidom' ),

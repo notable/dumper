@@ -3,7 +3,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as filenamify from 'filenamify';
 import {Stats} from './types';
 import Config from './config';
 import html2markdown from './html2markdown';
@@ -89,12 +88,6 @@ const Utils = {
   },
 
   path: {
-
-    sanitize ( filePath: string ): string {
-
-      return filenamify ( filePath );
-
-    },
 
     name ( filePath: string ): string {
 

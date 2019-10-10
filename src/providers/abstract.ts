@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import decode from 'html-entities-decode';
+import sanitize from 'sanitize-basename';
 import {Promisable} from 'type-fest';
 import {Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Class, Content, Source, SourceDetails} from '../types';
 import Config from '../config';
@@ -98,10 +99,10 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
     const created = metadata.created && Utils.lang.isDateValid ( metadata.created ) ? metadata.created : ( details.stats ? details.stats.birthtime : new Date () ),
           modified = metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : ( details.stats ? details.stats.mtime : created ),
-          titleFallback = details.filePath ? Utils.path.sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
+          titleFallback = details.filePath ? sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
 
     return {
-      title: metadata.title ? Utils.path.sanitize ( decode ( metadata.title ).trim () ) || titleFallback : titleFallback,
+      title: metadata.title ? sanitize ( decode ( metadata.title ).trim () ) || titleFallback : titleFallback,
       tags: metadata.tags ? metadata.tags.map ( tag => tag.trim () ).filter ( tag => tag ) : [],
       attachments: metadata.attachments ? metadata.attachments.map ( attachment => {
         attachment.metadata.created = Utils.lang.isDateValid ( attachment.metadata.created ) ? attachment.metadata.created : created;
@@ -153,7 +154,7 @@ class AbstractAttachment<NoteRaw, AttachmentRaw> {
   sanitizeMetadata ( metadata: Partial<AttachmentMetadata> ): AttachmentMetadata {
 
     return {
-      name: metadata.name ? Utils.path.sanitize ( metadata.name.trim () ) || Config.attachment.defaultName : Config.attachment.defaultName,
+      name: metadata.name ? sanitize ( metadata.name.trim () ) || Config.attachment.defaultName : Config.attachment.defaultName,
       created: metadata.created && Utils.lang.isDateValid ( metadata.created ) ? metadata.created : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
       modified: metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : new Date ( 'invalid' ) //UGLY: we are using this invalid date as kind of like a global variable
     };
