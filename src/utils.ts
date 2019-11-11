@@ -53,7 +53,21 @@ const Utils = {
 
   file: {
 
-    read ( filePath: string ): Promise<Buffer> {
+    checkSize ( filePath: string ): Promise<void> {
+
+      return Utils.file.stats ( filePath ).then ( stats => {
+
+        if ( stats.size < 1000000000 && stats.size < ( require ( 'v8' ).getHeapStatistics ().heap_size_limit * .75 ) ) return;
+
+        throw new Error ( 'File too large, try splitting it into smaller ones' );
+
+      });
+
+    },
+
+    async read ( filePath: string ): Promise<Buffer> {
+
+      await Utils.file.checkSize ( filePath );
 
       return new Promise ( ( resolve, reject ) => {
 
