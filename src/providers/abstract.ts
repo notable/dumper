@@ -103,7 +103,7 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
     return {
       title: metadata.title ? sanitize ( decode ( metadata.title ).trim () ) || titleFallback : titleFallback,
-      tags: metadata.tags ? metadata.tags.map ( tag => tag.trim () ).filter ( tag => tag ) : [],
+      tags: metadata.tags ? metadata.tags.map ( tag => String ( tag ).trim () ).filter ( tag => tag ) : [],
       attachments: metadata.attachments ? metadata.attachments.map ( attachment => {
         attachment.metadata.created = Utils.lang.isDateValid ( attachment.metadata.created ) ? attachment.metadata.created : created;
         attachment.metadata.modified = Utils.lang.isDateValid ( attachment.metadata.modified ) ? attachment.metadata.modified : modified;
