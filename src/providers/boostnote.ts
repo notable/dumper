@@ -64,6 +64,22 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   }
 
+  formatAttachmentsLinks ( content: string ): string {
+
+    return content.replace ( /\]\(:storage\/[a-z0-9-]+\/([^)]+)\)/i, '](@attachment/$1)' );
+
+  }
+
+  formatContent ( content: Content, metadata: NoteMetadata ): Content {
+
+    let str = content.toString ().trim ();
+
+    str = this.formatAttachmentsLinks ( str );
+
+    return Buffer.from ( str );
+
+  }
+
 }
 
 class BoostnoteAttachment extends AbstractAttachment<NoteRaw, AttachmentRaw> {
