@@ -18,7 +18,8 @@ type Attachment = {
 type AttachmentMetadata = {
   name: string,
   created: Date,
-  modified: Date
+  modified: Date,
+  mime?: string
 };
 
 type Note = {

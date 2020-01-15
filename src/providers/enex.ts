@@ -36,7 +36,7 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
     return {
       title: note.title || Utils.format.html.inferTitle ( note.content || '' ),
       tags: note.tag && Utils.lang.castArray ( note.tag ),
-      attachments: await Promise.all ( resources.map ( resource => this.provider.attachment.get ( resource ) ) ),
+      attachments: Utils.lang.flatten ( await Promise.all ( resources.map ( resource => this.provider.attachment.get ( resource ) ) ) ),
       created: note.created && this.parseDate ( note.created ),
       modified: note.updated && this.parseDate ( note.updated ),
       sourceUrl: note['note-attributes']['source-url']
@@ -83,11 +83,34 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
 class EnexAttachment extends AbstractAttachment<NoteRaw, AttachmentRaw> {
 
-  getMetadata ( attachment: AttachmentRaw ): Partial<AttachmentMetadata> {
+  getMetadata ( attachment: AttachmentRaw ): Partial<AttachmentMetadata>[] {
 
-    return {
-      name: attachment['resource-attributes'] && attachment['resource-attributes']['file-name']
-    };
+    const metadatas: Partial<AttachmentMetadata>[] = [],
+          mime = attachment.mime,
+          name = attachment['resource-attributes'] && attachment['resource-attributes']['file-name'];
+
+    if ( name ) {
+
+      metadatas.push ({ name, mime });
+
+    }
+
+    if ( attachment.recognition ) {
+
+      const recognition = xml2js ( attachment.recognition, { ignoreAttributes: false } );
+
+      if ( recognition.recoIndex && recognition.recoIndex['@_objID'] ) {
+
+        const ext = Utils.mime.inferExtension ( attachment.mime ),
+              name = `${recognition.recoIndex['@_objID']}${ext}`;
+
+        metadatas.push ({ name, mime });
+
+      }
+
+    }
+
+    return metadatas;
 
   }
 

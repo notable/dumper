@@ -37,7 +37,7 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
     return {
       title: note.title || Utils.format.markdown.inferTitle ( note.content || '' ),
       tags: note.tags,
-      attachments: await Promise.all ( attachmentsPaths.map ( attachmentPath => this.provider.attachment.get ( attachmentPath ) ) ),
+      attachments: Utils.lang.flatten ( await Promise.all ( attachmentsPaths.map ( attachmentPath => this.provider.attachment.get ( attachmentPath ) ) ) ),
       deleted: note.isTrashed,
       favorited: note.isStarred,
       created: note.createdAt && new Date ( note.createdAt ),

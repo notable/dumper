@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import * as fs from 'fs';
+import * as mime from 'mime-types';
 import * as path from 'path';
 import {Stats} from './types';
 import Config from './config';
@@ -46,6 +47,30 @@ const Utils = {
     castArray<T> ( x: T | T[] ): T[] {
 
       return Utils.lang.isArray ( x ) ? x : [x];
+
+    },
+
+    flatten<T> ( x: T[][] ): T[] {
+
+      return [].concat.apply ( [], x );
+
+    }
+
+  },
+
+  mime: {
+
+    inferExtension ( type: string ): string {
+
+      const ext = mime.extension ( type );
+
+      return ext ? `.${ext}` : '';
+
+    },
+
+    isImage ( type: string ): boolean {
+
+      return type.includes ( 'image' );
 
     }
 

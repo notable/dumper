@@ -29,7 +29,7 @@ abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
 
   isSupported ( source: Source ): boolean {
 
-    return !!this.extensions.find ( ext => Utils.lang.isString ( source ) && source.endsWith ( ext ) );
+    return Utils.lang.isString ( source ) && !!this.extensions.find ( ext => source.endsWith ( ext ) );
 
   }
 
@@ -137,16 +137,17 @@ class AbstractAttachment<NoteRaw, AttachmentRaw> {
 
   provider: AbstractProvider<NoteRaw, AttachmentRaw>;
 
-  async get ( attachment: AttachmentRaw ): Promise<Attachment> {
+  async get ( attachment: AttachmentRaw ): Promise<Attachment[]> {
 
-    const metadata = this.sanitizeMetadata ( await this.getMetadata ( attachment ) ),
-          content = await this.getContent ( attachment, metadata );
+    const metadatas = Utils.lang.castArray ( await this.getMetadata ( attachment ) ).map ( metadata => this.sanitizeMetadata ( metadata ) ),
+          contents = await Promise.all ( metadatas.map ( metadata => this.getContent ( attachment, metadata ) ) ),
+          attachments = metadatas.map ( ( metadata, i ) => ({ metadata, content: contents[i] }) );
 
-    return { metadata, content };
+    return attachments;
 
   }
 
-  getMetadata ( attachment: AttachmentRaw ): Promisable<Partial<AttachmentMetadata>> {
+  getMetadata ( attachment: AttachmentRaw ): Promisable<Partial<AttachmentMetadata> | Partial<AttachmentMetadata>[]> {
 
     throw new Error ( 'Missing implementation: Attachment#getMetadata' );
 
@@ -157,7 +158,8 @@ class AbstractAttachment<NoteRaw, AttachmentRaw> {
     return {
       name: metadata.name ? sanitize ( metadata.name.trim () ) || Config.attachment.defaultName : Config.attachment.defaultName,
       created: metadata.created && Utils.lang.isDateValid ( metadata.created ) ? metadata.created : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
-      modified: metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : new Date ( 'invalid' ) //UGLY: we are using this invalid date as kind of like a global variable
+      modified: metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
+      mime: metadata.mime
     };
 
   }
