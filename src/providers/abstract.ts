@@ -113,7 +113,8 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
       favorited: Utils.lang.isBoolean ( metadata.favorited ) ? metadata.favorited : false,
       pinned: Utils.lang.isBoolean ( metadata.pinned ) ? metadata.pinned : false,
       created,
-      modified
+      modified,
+      sourceUrl: Utils.lang.isString ( metadata.sourceUrl ) ? metadata.sourceUrl : undefined
     };
 
   }

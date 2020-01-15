@@ -34,7 +34,8 @@ type NoteMetadata = {
   favorited: boolean,
   pinned: boolean,
   created: Date,
-  modified: Date
+  modified: Date,
+  sourceUrl?: string
 };
 
 type Dump = ( note: Note ) => Promisable<void>;

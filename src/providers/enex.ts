@@ -38,7 +38,8 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
       tags: note.tag && Utils.lang.castArray ( note.tag ),
       attachments: await Promise.all ( resources.map ( resource => this.provider.attachment.get ( resource ) ) ),
       created: note.created && this.parseDate ( note.created ),
-      modified: note.updated && this.parseDate ( note.updated )
+      modified: note.updated && this.parseDate ( note.updated ),
+      sourceUrl: note['note-attributes']['source-url']
     };
 
   }
@@ -62,9 +63,19 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   }
 
+  formatSourceUrl ( content: string, sourceUrl: string ): string {
+
+    return `${content.trim ()}\n\n---\n\n> Source: ${sourceUrl}`;
+
+  }
+
   formatContent ( content: Content, metadata: NoteMetadata ): Content {
 
-    return Buffer.from ( Utils.format.html.convert ( content.toString (), metadata.title ) );
+    let str = Utils.format.html.convert ( content.toString (), metadata.title );
+
+    if ( metadata.sourceUrl ) str = this.formatSourceUrl ( str, metadata.sourceUrl );
+
+    return Buffer.from ( str );
 
   }
 
