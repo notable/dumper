@@ -61,9 +61,12 @@ function html2markdown ( html: string, options?: Options ): string {
       if ( !str.length ) return '';
       const style = ele.getAttribute ( 'style' );
       if ( !style ) return '';
-      const alignment = style.match ( /text-align:\s*(\S+);/ );
+      const alignment = style.match ( /text-align:\s*(\S+?);/ );
       if ( !alignment ) return `${str}\n\n`;
-      return `<p align="${alignment[1]}">${str}</p>\n\n`;
+      const nodeName = ele.nodeName;
+      const tag = /^h\d$/i.test ( nodeName ) ? nodeName.toLowerCase () : 'p';
+      if ( str.includes ( '\n' ) ) str = `\n\n${str}\n\n`;
+      return `<${tag} align="${alignment[1]}">${str}</${tag}>\n\n`;
     }
   });
 
