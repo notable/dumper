@@ -102,7 +102,7 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
           titleFallback = details.filePath ? sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
 
     return {
-      title: metadata.title ? sanitize ( decode ( metadata.title ).trim () ) || titleFallback : titleFallback,
+      title: metadata.title ? sanitize ( decode ( String ( metadata.title ) ).trim () ) || titleFallback : titleFallback,
       tags: metadata.tags ? metadata.tags.map ( tag => String ( tag ).trim () ).filter ( tag => tag ) : [],
       attachments: metadata.attachments ? metadata.attachments.map ( attachment => {
         attachment.metadata.created = Utils.lang.isDateValid ( attachment.metadata.created ) ? attachment.metadata.created : created;
