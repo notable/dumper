@@ -4,11 +4,14 @@
 import turndown = require ( '../../src/html2markdown/_turndown.js' ); //UGLY
 import {Options} from 'turndown';
 import TurndownService = require ( 'turndown' );
+import Utils from '../utils';
 
 /* HTML 2 MARKDOWN */
 
 //TODO: Maybe publish as a standalone package
 //TODO: Decouple providers-specific logic
+
+// Custom elements are transformed into regular non-empty "<div>" elements, otherwise they will be ignored
 
 function html2markdown ( html: string, options?: Options ): string {
 
@@ -17,6 +20,8 @@ function html2markdown ( html: string, options?: Options ): string {
              .replace ( /<head>([^]*?)<\/head>/gi, '' ) // Removing HTML head
              .replace ( /<div>(\s*)<\/div>/g, '' ) // Remove empty divs
              .replace ( /(<div>(\s*)<br ?\/>(\s*)<\/div>){2,}/g, '<div><br /></div>' ); // Remove extra line breaks
+
+  html = html.replace ( /<en-media([^>]+)><\/en-media>/g, '<div node="EN-MEDIA"$1>placeholder</div>' ); // Preserving `<en-media>`
 
   html = html.replace ( /<en-todo checked="true"(.*?)\/?>/g, '<input type="checkbox" checked />' ) // Replace enex checked checkbox
              .replace ( /<en-todo checked="false"(.*?)\/?>/g, '<input type="checkbox" />' ) // Replace enex unchecked checkbox
@@ -70,6 +75,21 @@ function html2markdown ( html: string, options?: Options ): string {
       str = str.replace ( /<(?:.|\n)*?>/gm, '' );
       str = str.includes ( '\n' ) ? `\n\n\`\`\`\n${str}\n\`\`\`\n` : `\`${str}\``;
       return str;
+    }
+  });
+
+  service.addRule ( 'media-enex', {
+    filter: node => node.nodeName === 'DIV' && node.getAttribute ( 'node' ) === 'EN-MEDIA' && !!node.getAttribute ( 'hash' ) && !!node.getAttribute ( 'type' ),
+    replacement: ( str, ele: HTMLElement ) => {
+      const hash = ele.getAttribute ( 'hash' );
+      const type = ele.getAttribute ( 'type' ) || '';
+      const filename = `${hash}${Utils.mime.inferExtension ( type )}`;
+      const isImage = Utils.mime.isImage ( type );
+      if ( isImage ) {
+        return `<img src="@attachment/${filename}" />`;
+      } else  {
+        return `<a href="@attachment/${filename}">${filename}</a>`;
+      }
     }
   });
 
