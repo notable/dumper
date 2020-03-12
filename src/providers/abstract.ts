@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import decode from 'html-entities-decode';
+import decode from 'entities-decode';
 import sanitize from 'sanitize-basename';
 import {Promisable} from 'type-fest';
 import {Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Class, Content, Source, SourceDetails} from '../types';
