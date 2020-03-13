@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import * as fs from 'fs';
-import * as mime from 'mime-types';
+import mime2ext from 'mime2ext';
 import * as path from 'path';
 import {Stats} from './types';
 import Config from './config';
@@ -62,7 +62,7 @@ const Utils = {
 
     inferExtension ( type: string ): string {
 
-      const ext = mime.extension ( type );
+      const ext = mime2ext ( type );
 
       return ext ? `.${ext}` : '';
 
