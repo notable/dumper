@@ -22,7 +22,7 @@ The following providers are currently implemented:
   - **Extensions**: `.enex`.
 - **Boostnote**: it can import notes written using [Boostnote](https://boostnote.io).
   - **Extensions**: `.cson`.
-- **HMTL**: it can import HTML notes, most popular note-taking apps can export to HTML.
+- **HTML**: it can import HTML notes, most popular note-taking apps can export to HTML.
   - **Extensions**: `.html`, `.htm`.
 - **Markdown**: it can import plain Markdown notes.
   - **Extensions**: `.md`, `.mkd`, `.mkdn`, `.mdwn`, `.mdown`, `.markdown`, `.markdn`, `.mdtxt`, `.mdtext`, `.txt`.
