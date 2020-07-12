@@ -39,7 +39,7 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
       attachments: Utils.lang.flatten ( await Promise.all ( resources.map ( resource => this.provider.attachment.get ( resource ) ) ) ),
       created: note.created && this.parseDate ( note.created ),
       modified: note.updated && this.parseDate ( note.updated ),
-      sourceUrl: note['note-attributes']['source-url']
+      sourceUrl: note['note-attributes'] && note['note-attributes']['source-url']
     };
 
   }

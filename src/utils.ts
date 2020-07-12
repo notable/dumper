@@ -38,9 +38,9 @@ const Utils = {
 
     },
 
-    isDateValid ( x: Date ): boolean {
+    isDateValid ( x ): x is Date {
 
-      return !isNaN ( x.getTime () );
+      return x instanceof Date && !isNaN ( x.getTime () );
 
     },
 

@@ -97,8 +97,8 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
   sanitizeMetadata ( metadata: Partial<NoteMetadata>, details: SourceDetails ): NoteMetadata {
 
-    const created = metadata.created && Utils.lang.isDateValid ( metadata.created ) ? metadata.created : ( details.stats ? details.stats.birthtime : new Date () ),
-          modified = metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : ( details.stats ? details.stats.mtime : created ),
+    const created = Utils.lang.isDateValid ( metadata.created ) ? metadata.created : ( details.stats ? details.stats.birthtime : new Date () ),
+          modified = Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : ( details.stats ? details.stats.mtime : created ),
           titleFallback = details.filePath ? sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
 
     return {
@@ -156,9 +156,9 @@ class AbstractAttachment<NoteRaw, AttachmentRaw> {
   sanitizeMetadata ( metadata: Partial<AttachmentMetadata> ): AttachmentMetadata {
 
     return {
-      name: metadata.name ? sanitize ( metadata.name.trim () ) || Config.attachment.defaultName : Config.attachment.defaultName,
-      created: metadata.created && Utils.lang.isDateValid ( metadata.created ) ? metadata.created : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
-      modified: metadata.modified && Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
+      name: metadata.name ? sanitize ( String ( metadata.name ).trim () ) || Config.attachment.defaultName : Config.attachment.defaultName,
+      created: Utils.lang.isDateValid ( metadata.created ) ? metadata.created : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
+      modified: Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : new Date ( 'invalid' ), //UGLY: we are using this invalid date as kind of like a global variable
       mime: metadata.mime
     };
 
