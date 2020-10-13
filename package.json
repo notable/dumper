@@ -41,7 +41,6 @@
     "fast-xml-parser": "3.17.4",
     "mime2ext": "^1.0.0",
     "sanitize-basename": "^1.0.0",
-    "string-matches": "^1.1.3",
     "type-fest": "^0.17.0"
   },
   "peerDependencies": {
