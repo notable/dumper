@@ -38,11 +38,11 @@
   "dependencies": {
     "cson2json": "^1.0.0",
     "entities-decode": "^1.0.0",
-    "fast-xml-parser": "3.16.0",
+    "fast-xml-parser": "3.17.4",
     "mime2ext": "^1.0.0",
     "sanitize-basename": "^1.0.0",
     "string-matches": "^1.1.3",
-    "type-fest": "^0.8.1"
+    "type-fest": "^0.17.0"
   },
   "peerDependencies": {
     "minidom": "1.0.0"
@@ -55,7 +55,7 @@
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.3",
     "test-diff": "^1.1.0",
-    "typescript": "^3.5.3",
+    "typescript": "^3.9.7",
     "typescript-transform-export-interop": "^1.0.2"
   }
 }
