@@ -54,6 +54,12 @@ const Utils = {
 
       return [].concat.apply ( [], x );
 
+    },
+
+    matchAll: ( str: string, re: RegExp ): RegExpMatchArray[] => {
+
+      return Array.from ( str.matchAll ( re ) );
+
     }
 
   },

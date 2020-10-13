@@ -3,7 +3,6 @@
 
 import cson2json from 'cson2json';
 import * as path from 'path';
-import matchesAll from 'string-matches';
 import {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../types';
 import Utils from '../utils';
 import {AbstractProvider, AbstractNote, AbstractAttachment} from './abstract';
@@ -50,7 +49,7 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
     if ( !details.filePath ) return [];
 
-    const attachmentsLinks = note.content ? matchesAll ( note.content, /\]\(:storage\/([^)]+)\)/gi ): [],
+    const attachmentsLinks = note.content ? Utils.lang.matchAll ( note.content, /\]\(:storage\/([^)]+)\)/gi ) : [],
           attachmentsCwd = process.env.IS_TEST ? path.resolve ( details.filePath, '..', 'attachments' ) : path.resolve ( details.filePath, '..', '..', 'attachments' ),
           attachmentsPaths = attachmentsLinks.map ( match => path.join ( attachmentsCwd, match[1] ) );
 
