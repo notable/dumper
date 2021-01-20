@@ -38,7 +38,7 @@ interface Dumper {
 }
 
 interface Options {
-  DOMParser?: DOMParser,
+  DOMParser?: DOMParser, // This option is only optional if you are in a browser-like environment, e.i. "window.DOMParser" exists
   source: string | string[],
   dump ( note: Note ): void | Promise<void>
 }
