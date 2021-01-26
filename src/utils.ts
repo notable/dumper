@@ -82,13 +82,31 @@ const Utils = {
 
   },
 
+  system: {
+
+    getMaxHeapSize: (): number => {
+
+      try {
+
+        return performance['memory'].jsHeapSizeLimit;
+
+      } catch {
+
+        return 2197815296; // Hard-coded for better web compatibility, source: "require ( 'v8' ).getHeapStatistics ().heap_size_limit"
+
+      }
+
+    },
+
+  },
+
   file: {
 
     checkSize ( filePath: string ): Promise<void> {
 
       return Utils.file.stats ( filePath ).then ( stats => {
 
-        if ( stats.size < 1000000000 && stats.size < ( require ( 'v8' ).getHeapStatistics ().heap_size_limit * .75 ) ) return;
+        if ( stats.size < ( Utils.system.getMaxHeapSize () * .75 ) ) return;
 
         throw new Error ( 'File too large, try splitting it into smaller ones' );
 
