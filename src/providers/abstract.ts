@@ -29,7 +29,7 @@ abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
 
   isSupported ( source: Source ): boolean {
 
-    return Utils.lang.isString ( source ) && !!this.extensions.find ( ext => source.endsWith ( ext ) );
+    return Utils.lang.isString ( source ) && !!this.extensions.find ( ext => source.toLowerCase ().endsWith ( ext ) );
 
   }
 
