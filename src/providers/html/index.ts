@@ -1,18 +1,16 @@
 
 /* IMPORT */
 
-import {NoteMetadata, Content} from '../types';
-import Utils from '../utils';
-import {AbstractProvider, AbstractNote} from './abstract';
+import {NoteMetadata, Content} from '../../types';
+import Utils from '../../utils';
+import {AbstractProvider, AbstractNote} from '../abstract';
+import {AttachmentRaw, NoteRaw} from './types';
 
-/* TYPES */
-
-type NoteRaw = Buffer;
-type AttachmentRaw = undefined;
-
-/* HTML */
+/* MAIN */
 
 class HTMLProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
+
+  /* VARIABLES */
 
   name = 'HTML';
   extensions = ['.html', '.htm'];
@@ -24,14 +22,14 @@ class HTMLNote extends AbstractNote<NoteRaw, AttachmentRaw> {
   getMetadata ( note: NoteRaw ): Partial<NoteMetadata> {
 
     return {
-      title: Utils.format.html.inferTitle ( note.toString () )
+      title: Utils.format.html.inferTitle ( Utils.buffer.toUtf8 ( note ) )
     };
 
   }
 
   formatContent ( content: Content, metadata: NoteMetadata ): Content {
 
-    return Buffer.from ( Utils.format.html.convert ( content.toString (), metadata.title ) );
+    return Utils.buffer.fromUtf8 ( Utils.format.html.convert ( Utils.buffer.toUtf8 ( content ), metadata.title ) );
 
   }
 

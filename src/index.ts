@@ -6,9 +6,11 @@ import Config from './config';
 import {Boostnote, Enex, HTML, Markdown} from './providers';
 import Utils from './utils';
 
-/* DUMPER */
+/* MAIN */
 
 const Dumper = {
+
+  /* VARIABLES */
 
   providers: [
     Boostnote,
@@ -17,18 +19,20 @@ const Dumper = {
     Markdown
   ],
 
-  isSupported ( source: Source ): boolean {
+  /* API */
+
+  isSupported: ( source: Source ): boolean => {
 
     return !!Dumper.providers.find ( provider => provider.isSupported ( source ) );
 
   },
 
-  async dump ( options: Options ): Promise<void> {
+  dump: async ( options: Options ): Promise<void> => {
 
     if ( options.DOMParser ) Config.html2markdown.options['parser'] = options.DOMParser;
 
-    const sources = Utils.lang.castArray ( options.source ),
-          sourcesUnsupported = sources.filter ( source => !Dumper.isSupported ( source ) );
+    const sources = Utils.lang.castArray ( options.source );
+    const sourcesUnsupported = sources.filter ( source => !Dumper.isSupported ( source ) );
 
     if ( sourcesUnsupported.length ) throw new Error ( `These sources are not supported: ${sourcesUnsupported.join ( ', ' )}` );
 

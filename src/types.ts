@@ -2,11 +2,18 @@
 /* IMPORT */
 
 import {Stats} from 'fs';
-import {Class, Promisable} from 'type-fest';
 
-/* TYPES */
+/* HELPERS */
 
-type DOMParser = Class<{
+type Constructor<T> = { new (): T };
+
+type ConstructorWith<T, Arguments extends unknown[]> = { new ( ...args: Arguments ): T };
+
+type Promisable<T> = Promise<T> | T;
+
+/* MAIN */
+
+type DOMParser = Constructor<{
   parseFromString ( str: string, mimeType: string ): Document
 }>;
 
@@ -41,14 +48,14 @@ type NoteMetadata = {
 
 type Dump = ( note: Note ) => Promisable<void>;
 
-type Source = string | Buffer;
+type Source = string | Uint8Array;
 
 type SourceDetails = {
   stats?: Stats,
   filePath?: string
 };
 
-type Content = Buffer;
+type Content = Uint8Array;
 
 type Options = {
   DOMParser?: DOMParser,
@@ -58,4 +65,5 @@ type Options = {
 
 /* EXPORT */
 
-export {DOMParser, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Class, Content, Stats, Options};
+export {Constructor, ConstructorWith, Promisable};
+export {DOMParser, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Content, Stats, Options};

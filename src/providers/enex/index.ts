@@ -2,26 +2,25 @@
 /* IMPORT */
 
 import {parse as xml2js} from 'fast-xml-parser';
-import {AttachmentMetadata, NoteMetadata, Content} from '../types';
-import Utils from '../utils';
-import {AbstractProvider, AbstractNote, AbstractAttachment} from './abstract';
+import {AttachmentMetadata, NoteMetadata, Content} from '../../types';
+import Utils from '../../utils';
+import {AbstractProvider, AbstractNote, AbstractAttachment} from '../abstract';
+import {AttachmentRaw, NoteRaw} from './types';
 
-/* TYPES */
-
-type XML = any;
-type NoteRaw = XML;
-type AttachmentRaw = XML;
-
-/* ENEX */
+/* MAIN */
 
 class EnexProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
+
+  /* VARIABLES */
 
   name = 'Evernote';
   extensions = ['.enex'];
 
+  /* API */
+
   getNotesRaw ( content: Content ): NoteRaw[] {
 
-    return Utils.lang.castArray ( xml2js ( content.toString () )['en-export'].note );
+    return Utils.lang.castArray ( xml2js ( Utils.buffer.toUtf8 ( content ) )['en-export'].note );
 
   }
 
@@ -59,7 +58,7 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   getContent ( note: NoteRaw ): Content {
 
-    return Buffer.from ( note.content || '' );
+    return Utils.buffer.fromUtf8 ( note.content || '' );
 
   }
 
@@ -71,11 +70,11 @@ class EnexNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   formatContent ( content: Content, metadata: NoteMetadata ): Content {
 
-    let str = Utils.format.html.convert ( content.toString (), metadata.title );
+    let str = Utils.format.html.convert ( Utils.buffer.toUtf8 ( content ), metadata.title );
 
     if ( metadata.sourceUrl ) str = this.formatSourceUrl ( str, metadata.sourceUrl );
 
-    return Buffer.from ( str );
+    return Utils.buffer.fromUtf8 ( str );
 
   }
 
@@ -85,9 +84,9 @@ class EnexAttachment extends AbstractAttachment<NoteRaw, AttachmentRaw> {
 
   getMetadata ( attachment: AttachmentRaw ): Partial<AttachmentMetadata>[] {
 
-    const metadatas: Partial<AttachmentMetadata>[] = [],
-          mime = attachment.mime,
-          name = attachment['resource-attributes'] && attachment['resource-attributes']['file-name'];
+    const metadatas: Partial<AttachmentMetadata>[] = [];
+    const mime = attachment.mime;
+    const name = attachment['resource-attributes'] && attachment['resource-attributes']['file-name'];
 
     if ( name ) {
 
@@ -101,8 +100,8 @@ class EnexAttachment extends AbstractAttachment<NoteRaw, AttachmentRaw> {
 
       if ( recognition.recoIndex && recognition.recoIndex['@_objID'] ) {
 
-        const ext = Utils.mime.inferExtension ( attachment.mime ),
-              name = `${recognition.recoIndex['@_objID']}${ext}`;
+        const ext = Utils.mime.inferExtension ( attachment.mime );
+        const name = `${recognition.recoIndex['@_objID']}${ext}`;
 
         metadatas.push ({ name, mime });
 
@@ -116,7 +115,7 @@ class EnexAttachment extends AbstractAttachment<NoteRaw, AttachmentRaw> {
 
   getContent ( attachment: AttachmentRaw ): Content {
 
-    return Buffer.from ( attachment.data, 'base64' );
+    return Utils.buffer.fromBase64 ( attachment.data );
 
   }
 

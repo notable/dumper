@@ -1,18 +1,16 @@
 
 /* IMPORT */
 
-import {NoteMetadata} from '../types';
-import Utils from '../utils';
-import {AbstractProvider, AbstractNote} from './abstract';
+import {NoteMetadata} from '../../types';
+import Utils from '../../utils';
+import {AbstractProvider, AbstractNote} from '../abstract';
+import {AttachmentRaw, NoteRaw} from './types';
 
-/* TYPES */
-
-type NoteRaw = Buffer;
-type AttachmentRaw = undefined;
-
-/* MARKDOWN */
+/* MAIN */
 
 class MarkdownProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
+
+  /* VARIABLES */
 
   name = 'Markdown';
   extensions = ['.md', '.mkd', '.mkdn', '.mdwn', '.mdown', '.markdown', '.markdn', '.mdtxt', '.mdtext', '.rmd', '.txt'];
@@ -24,7 +22,7 @@ class MarkdownNote extends AbstractNote<NoteRaw, AttachmentRaw> {
   getMetadata ( note: NoteRaw ): Partial<NoteMetadata> {
 
     return {
-      title: Utils.format.markdown.inferTitle ( note.toString () )
+      title: Utils.format.markdown.inferTitle ( Utils.buffer.toUtf8 ( note ) )
     };
 
   }

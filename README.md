@@ -53,7 +53,7 @@ interface Note {
         created: Date,
         modified: Date
       },
-      content: Buffer
+      content: Uint8Array
     }[],
     deleted: boolean,
     favorited: boolean,
@@ -61,7 +61,7 @@ interface Note {
     created: Date,
     modified: Date
   },
-  content: Buffer
+  content: Uint8Array
 }
 ```
 

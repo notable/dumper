@@ -3,14 +3,15 @@
 
 import decode from 'entities-decode';
 import sanitize from 'sanitize-basename';
-import {Promisable} from 'type-fest';
-import {Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Class, Content, Source, SourceDetails} from '../types';
-import Config from '../config';
-import Utils from '../utils';
+import {ConstructorWith, Promisable, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Content, Source, SourceDetails} from '../../types';
+import Config from '../../config';
+import Utils from '../../utils';
 
-/* ABSTRACT */
+/* MAIN */
 
 abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
+
+  /* VARIABLES */
 
   abstract name: string;
   abstract extensions: string[];
@@ -18,14 +19,16 @@ abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
   note: AbstractNote<NoteRaw, AttachmentRaw>;
   attachment: AbstractAttachment<NoteRaw, AttachmentRaw>;
 
-  constructor ( Note: Class<AbstractNote<NoteRaw, AttachmentRaw>> = AbstractNote, Attachment: Class<AbstractAttachment<NoteRaw, AttachmentRaw>> = AbstractAttachment ) {
+  /* CONSTRUCTOR */
 
-    this.note = new Note ();
-    this.attachment = new Attachment ();
+  constructor ( Note: ConstructorWith<AbstractNote<NoteRaw, AttachmentRaw>, [AbstractProvider<NoteRaw, AttachmentRaw>]> = AbstractNote, Attachment: ConstructorWith<AbstractAttachment<NoteRaw, AttachmentRaw>, [AbstractProvider<NoteRaw, AttachmentRaw>]> = AbstractAttachment ) {
 
-    this.note.provider = this.attachment.provider = this;
+    this.note = new Note ( this );
+    this.attachment = new Attachment ( this );
 
   }
+
+  /* API */
 
   isSupported ( source: Source ): boolean {
 
@@ -60,9 +63,9 @@ abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
 
   async dump ( source: Source, dump: Dump ): Promise<void> {
 
-    const details = await this.getDetails ( source ),
-          content = await this.getContent ( source ),
-          notesRaw = await this.getNotesRaw ( content );
+    const details = await this.getDetails ( source );
+    const content = await this.getContent ( source );
+    const notesRaw = await this.getNotesRaw ( content );
 
     for ( let noteRaw of notesRaw ) {
 
@@ -78,12 +81,24 @@ abstract class AbstractProvider<NoteRaw, AttachmentRaw> {
 
 class AbstractNote<NoteRaw, AttachmentRaw> {
 
-  provider: AbstractProvider<NoteRaw, AttachmentRaw>;
+  /* VARIABLES */
+
+  protected provider: AbstractProvider<NoteRaw, AttachmentRaw>;
+
+  /* CONSTRUCTOR */
+
+  constructor ( provider: AbstractProvider<NoteRaw, AttachmentRaw> ) {
+
+    this.provider = provider;
+
+  }
+
+  /* API */
 
   async get ( note: NoteRaw, details: SourceDetails ): Promise<Note> {
 
-    const metadata = await this.sanitizeMetadata ( await this.getMetadata ( note, details ), details ),
-          content = await this.formatContent ( await this.getContent ( note, metadata ), metadata );
+    const metadata = await this.sanitizeMetadata ( await this.getMetadata ( note, details ), details );
+    const content = await this.formatContent ( await this.getContent ( note, metadata ), metadata );
 
     return { metadata, content };
 
@@ -97,9 +112,9 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
   sanitizeMetadata ( metadata: Partial<NoteMetadata>, details: SourceDetails ): NoteMetadata {
 
-    const created = Utils.lang.isDateValid ( metadata.created ) ? metadata.created : ( details.stats ? details.stats.birthtime : new Date () ),
-          modified = Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : ( details.stats ? details.stats.mtime : created ),
-          titleFallback = details.filePath ? sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
+    const created = Utils.lang.isDateValid ( metadata.created ) ? metadata.created : ( details.stats ? details.stats.birthtime : new Date () );
+    const modified = Utils.lang.isDateValid ( metadata.modified ) ? metadata.modified : ( details.stats ? details.stats.mtime : created );
+    const titleFallback = details.filePath ? sanitize ( Utils.path.name ( details.filePath ) ) || Config.note.defaultTitle : Config.note.defaultTitle;
 
     return {
       title: metadata.title ? sanitize ( decode ( String ( metadata.title ) ).trim () ) || titleFallback : titleFallback,
@@ -127,7 +142,7 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
   formatContent ( content: Content, metadata: NoteMetadata ): Promisable<Content> {
 
-    return Buffer.from ( content.toString ().trim () );
+    return Utils.buffer.fromUtf8 ( Utils.buffer.toUtf8 ( content ).trim () );
 
   }
 
@@ -135,13 +150,25 @@ class AbstractNote<NoteRaw, AttachmentRaw> {
 
 class AbstractAttachment<NoteRaw, AttachmentRaw> {
 
-  provider: AbstractProvider<NoteRaw, AttachmentRaw>;
+  /* VARIABLES */
+
+  protected provider: AbstractProvider<NoteRaw, AttachmentRaw>;
+
+  /* CONSTRUCTOR */
+
+  constructor ( provider: AbstractProvider<NoteRaw, AttachmentRaw> ) {
+
+    this.provider = provider;
+
+  }
+
+  /* API */
 
   async get ( attachment: AttachmentRaw ): Promise<Attachment[]> {
 
-    const metadatas = Utils.lang.castArray ( await this.getMetadata ( attachment ) ).map ( metadata => this.sanitizeMetadata ( metadata ) ),
-          contents = await Promise.all ( metadatas.map ( metadata => this.getContent ( attachment, metadata ) ) ),
-          attachments = metadatas.map ( ( metadata, i ) => ({ metadata, content: contents[i] }) );
+    const metadatas = Utils.lang.castArray ( await this.getMetadata ( attachment ) ).map ( metadata => this.sanitizeMetadata ( metadata ) );
+    const contents = await Promise.all ( metadatas.map ( metadata => this.getContent ( attachment, metadata ) ) );
+    const attachments = metadatas.map ( ( metadata, i ) => ({ metadata, content: contents[i] }) );
 
     return attachments;
 

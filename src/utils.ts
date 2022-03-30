@@ -1,58 +1,86 @@
 
 /* IMPORT */
 
+import html2markdown from '@notable/html2markdown';
+import decodeBase64 from 'decode-base64';
 import * as fs from 'fs';
 import mime2ext from 'mime2ext';
 import * as path from 'path';
+import U8 from 'uint8-encoding';
 import {Stats} from './types';
 import Config from './config';
-import html2markdown from './html2markdown';
 
-/* UTILS */
+/* MAIN */
 
 const Utils = {
 
+  /* API */
+
+  buffer: {
+
+    fromBase64: ( string: string ): Uint8Array => {
+
+      string = string.replace ( /\r?\n|\r/g, '' ); // Sanitization for stupid inputs like Evernote's
+
+      return decodeBase64 ( string );
+
+    },
+
+    fromUtf8: ( string: string ): Uint8Array => {
+
+      return U8.encode ( string );
+
+    },
+
+    toUtf8: ( buffer: Uint8Array ): string => {
+
+      return U8.decode ( buffer );
+
+    }
+
+  },
+
   lang: {
 
-    isArray ( x ): x is any[] {
+    isArray: ( value: unknown ): value is unknown[] => {
 
-      return x instanceof Array;
-
-    },
-
-    isBoolean ( x ): x is boolean {
-
-      return typeof x === 'boolean';
+      return value instanceof Array;
 
     },
 
-    isString ( x ): x is string {
+    isBoolean: ( value: unknown ): value is boolean => {
 
-      return typeof x === 'string';
-
-    },
-
-    isBuffer ( x ): x is Buffer {
-
-      return x instanceof Buffer;
+      return typeof value === 'boolean';
 
     },
 
-    isDateValid ( x ): x is Date {
+    isString: ( value: unknown ): value is string => {
 
-      return x instanceof Date && !isNaN ( x.getTime () );
-
-    },
-
-    castArray<T> ( x: T | T[] ): T[] {
-
-      return Utils.lang.isArray ( x ) ? x : [x];
+      return typeof value === 'string';
 
     },
 
-    flatten<T> ( x: T[][] ): T[] {
+    isBuffer: ( value: unknown ): value is Uint8Array => {
 
-      return [].concat.apply ( [], x );
+      return value instanceof Uint8Array;
+
+    },
+
+    isDateValid: ( value: unknown ): value is Date => {
+
+      return value instanceof Date && !isNaN ( value.getTime () );
+
+    },
+
+    castArray: <T> ( value: T | T[] ): T[] => {
+
+      return Utils.lang.isArray ( value ) ? value : [value];
+
+    },
+
+    flatten: <T> ( value: T[][] ): T[] => {
+
+      return [].concat.apply ( [], value );
 
     },
 
@@ -66,7 +94,7 @@ const Utils = {
 
   mime: {
 
-    inferExtension ( type: string ): string {
+    inferExtension: ( type: string ): string => {
 
       const ext = mime2ext ( type );
 
@@ -74,7 +102,7 @@ const Utils = {
 
     },
 
-    isImage ( type: string ): boolean {
+    isImage: ( type: string ): boolean => {
 
       return type.includes ( 'image' );
 
@@ -102,7 +130,7 @@ const Utils = {
 
   file: {
 
-    checkSize ( filePath: string ): Promise<void> {
+    checkSize: ( filePath: string ): Promise<void> => {
 
       return Utils.file.stats ( filePath ).then ( stats => {
 
@@ -114,7 +142,7 @@ const Utils = {
 
     },
 
-    async read ( filePath: string ): Promise<Buffer> {
+    read: async ( filePath: string ): Promise<Uint8Array> => {
 
       await Utils.file.checkSize ( filePath );
 
@@ -124,7 +152,7 @@ const Utils = {
 
           if ( err ) return reject ( err );
 
-          resolve ( data );
+          return resolve ( data );
 
         });
 
@@ -132,7 +160,7 @@ const Utils = {
 
     },
 
-    stats ( filePath: string ): Promise<Stats> {
+    stats: ( filePath: string ): Promise<Stats> => {
 
       return new Promise ( ( resolve, reject ) => {
 
@@ -140,7 +168,7 @@ const Utils = {
 
           if ( err ) return reject ( err );
 
-          resolve ( stats );
+          return resolve ( stats );
 
         });
 
@@ -152,7 +180,7 @@ const Utils = {
 
   path: {
 
-    name ( filePath: string ): string {
+    name: ( filePath: string ): string => {
 
       return path.basename ( filePath, path.extname ( filePath ) );
 
@@ -164,7 +192,7 @@ const Utils = {
 
     txt: {
 
-      inferTitle ( content: string ): string | undefined {
+      inferTitle: ( content: string ): string | undefined => {
 
         const firstUnemptyLine = content.match ( /^.*?\S.*$/m );
 
@@ -176,7 +204,7 @@ const Utils = {
 
     markdown: {
 
-      inferTitle ( content: string ): string | undefined {
+      inferTitle: ( content: string ): string | undefined => {
 
         const headingMatch = content.match ( /^\s{0,3}#+\s(.*)(\s#+\s*$)?/m );
 
@@ -188,7 +216,7 @@ const Utils = {
 
     html: {
 
-      inferTitle ( content: string ): string | undefined {
+      inferTitle: ( content: string ): string | undefined => {
 
         const headingMatch = content.match ( /<h1(?:\s[^>]*)?>(.*?)<\/h1>/i );
 
@@ -200,14 +228,14 @@ const Utils = {
 
       },
 
-      ensureTitle ( content: string, title: string ): string {
+      ensureTitle: ( content: string, title: string ): string => {
 
         const headingMatch = content.match ( /<h1(?:\s[^>]*)?>(.*?)<\/h1>/i );
 
         if ( headingMatch ) return content;
 
-        const titleTag = `<h1>${title}</h1>`,
-              bodyIndex = content.indexOf ( '<body>' );
+        const titleTag = `<h1>${title}</h1>`;
+        const bodyIndex = content.indexOf ( '<body>' );
 
         if ( bodyIndex >= 0 ) {
 
@@ -221,7 +249,7 @@ const Utils = {
 
       },
 
-      convert ( content: string, title?: string ): string {
+      convert: ( content: string, title?: string ): string => {
 
         title = title || Utils.format.html.inferTitle ( content );
 

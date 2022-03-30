@@ -1,19 +1,20 @@
 
 /* IMPORT */
 
-const argv = require ( 'minimist' )( process.argv.slice ( 2 ) ),
-      diff = require ( 'test-diff' )
-      fs = require ( 'fs' ),
-      mkdirp = require ( 'mkdirp' ),
-      minidom = require ( 'minidom' ),
-      path = require ( 'path' ),
-      {default: Dumper} = require ( '../dist' );
+const argv = require ( 'minimist' )( process.argv.slice ( 2 ) );
+const diff = require ( 'test-diff' );
+const fs = require ( 'fs' );
+const mkdirp = require ( 'mkdirp' );
+const minidom = require ( 'minidom' );
+const path = require ( 'path' );
+const U8 = require ( 'uint8-encoding' );
+const {default: Dumper} = require ( '../dist' );
 
 /* VARIABLES */
 
-const OUTPUT = path.join ( __dirname, 'output' ),
-      SOURCE = path.join ( __dirname, 'source' ),
-      CHECK = path.join ( __dirname, 'check' );
+const OUTPUT = path.join ( __dirname, 'output' );
+const SOURCE = path.join ( __dirname, 'source' );
+const CHECK = path.join ( __dirname, 'check' );
 
 /* DOM PARSER */
 
@@ -38,7 +39,7 @@ function make ( source ) {
         if ( obj.attachments ) obj.attachments = obj.attachments.map ( attachment => attachment.metadata.name );
       }
       mkdirp.sync ( path.join ( OUTPUT, source ) );
-      fs.writeFileSync ( path.join ( OUTPUT, source, `${note.metadata.title}.md` ), `${note.content.toString ()}\n` );
+      fs.writeFileSync ( path.join ( OUTPUT, source, `${note.metadata.title}.md` ), `${U8.decode ( note.content )}\n` );
       const noteMetadata = { ...note.metadata };
       replaceAttachments ( noteMetadata );
       replaceDates ( noteMetadata );
@@ -56,8 +57,8 @@ function make ( source ) {
 
 process.env.IS_TEST = true;
 
-const GLOB_PROVIDER = argv.provider ? `${argv.provider}` : '*',
-      GLOB_FILE = argv.file ? `${argv.file}` : '*';
+const GLOB_PROVIDER = argv.provider ? `${argv.provider}` : '*';
+const GLOB_FILE = argv.file ? `${argv.file}` : '*';
 
 diff ({
   source: {

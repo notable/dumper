@@ -3,25 +3,25 @@
 
 import cson2json from 'cson2json';
 import * as path from 'path';
-import {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../types';
-import Utils from '../utils';
-import {AbstractProvider, AbstractNote, AbstractAttachment} from './abstract';
+import {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../../types';
+import Utils from '../../utils';
+import {AbstractProvider, AbstractNote, AbstractAttachment} from '../abstract';
+import {AttachmentRaw, NoteRaw} from './types';
 
-/* TYPES */
-
-type NoteRaw = any;
-type AttachmentRaw = string;
-
-/* BOOSTNOTE */
+/* MAIN */
 
 class BoostnoteProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
+
+  /* VARIABLES */
 
   name = 'Boostnote';
   extensions = ['.cson'];
 
+  /* API */
+
   getNotesRaw ( content: Content ): NoteRaw[] {
 
-    return [cson2json ( content.toString () )];
+    return [cson2json ( Utils.buffer.toUtf8 ( content ) )];
 
   }
 
@@ -49,9 +49,9 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
     if ( !details.filePath ) return [];
 
-    const attachmentsLinks = note.content ? Utils.lang.matchAll ( note.content, /\]\(:storage\/([^)]+)\)/gi ) : [],
-          attachmentsCwd = process.env.IS_TEST ? path.resolve ( details.filePath, '..', 'attachments' ) : path.resolve ( details.filePath, '..', '..', 'attachments' ),
-          attachmentsPaths = attachmentsLinks.map ( match => path.join ( attachmentsCwd, match[1] ) );
+    const attachmentsLinks = note.content ? Utils.lang.matchAll ( note.content, /\]\(:storage\/([^)]+)\)/gi ) : [];
+    const attachmentsCwd = process.env.IS_TEST ? path.resolve ( details.filePath, '..', 'attachments' ) : path.resolve ( details.filePath, '..', '..', 'attachments' );
+    const attachmentsPaths = attachmentsLinks.map ( match => path.join ( attachmentsCwd, match[1] ) );
 
     return attachmentsPaths;
 
@@ -59,7 +59,7 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   getContent ( note: NoteRaw ): Content {
 
-    return Buffer.from ( note.content || '' );
+    return Utils.buffer.fromUtf8 ( note.content || '' );
 
   }
 
@@ -71,11 +71,11 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
 
   formatContent ( content: Content, metadata: NoteMetadata ): Content {
 
-    let str = content.toString ().trim ();
+    let str = Utils.buffer.toUtf8 ( content ).trim ();
 
     str = this.formatAttachmentsLinks ( str );
 
-    return Buffer.from ( str );
+    return Utils.buffer.fromUtf8 ( str );
 
   }
 

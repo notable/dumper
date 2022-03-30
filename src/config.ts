@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {Options as TurndownOptions} from 'turndown';
+import {Options} from '@notable/html2markdown';
 
-/* CONFIG */
+/* MAIN */
 
 const Config = {
   note: {
@@ -13,7 +13,7 @@ const Config = {
     defaultName: 'Untitled'
   },
   html2markdown: {
-    options: {
+    options: <Options> {
       bulletListMarker: '-',
       codeBlockStyle: 'fenced',
       emDelimiter: '_',
@@ -22,7 +22,7 @@ const Config = {
       hr: '---',
       linkStyle: 'inlined',
       strongDelimiter: '**'
-    } as TurndownOptions
+    }
   }
 };
 
