@@ -13,7 +13,7 @@ class MarkdownProvider extends AbstractProvider<NoteRaw, AttachmentRaw> {
   /* VARIABLES */
 
   name = 'Markdown';
-  extensions = ['.md', '.mkd', '.mkdn', '.mdwn', '.mdown', '.markdown', '.markdn', '.mdtxt', '.mdtext', '.rmd', '.txt'];
+  extensions = ['.md', '.mkd', '.mkdn', '.mdwn', '.mdown', '.markdown', '.markdn', '.mdtxt', '.mdtext', '.qmd', '.rmd', '.txt'];
 
 }
 
