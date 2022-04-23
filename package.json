@@ -36,7 +36,7 @@
     "attachments"
   ],
   "dependencies": {
-    "@notable/html2markdown": "^1.1.1",
+    "@notable/html2markdown": "^1.1.2",
     "cson2json": "^1.0.0",
     "decode-base64": "^2.0.0",
     "entities-decode": "^1.0.0",
