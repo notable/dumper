@@ -3,9 +3,9 @@
 
 const argv = require ( 'minimist' )( process.argv.slice ( 2 ) );
 const diff = require ( 'test-diff' );
+const domino = require ( 'domino' );
 const fs = require ( 'fs' );
 const mkdirp = require ( 'mkdirp' );
-const minidom = require ( 'minidom' );
 const path = require ( 'path' );
 const U8 = require ( 'uint8-encoding' );
 const {default: Dumper} = require ( '../dist' );
@@ -20,7 +20,7 @@ const CHECK = path.join ( __dirname, 'check' );
 
 class DOMParser {
   parseFromString ( str ) {
-    return minidom ( str );
+    return domino.createWindow ( str ).document;
   }
 }
 
