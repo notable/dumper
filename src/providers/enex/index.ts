@@ -2,10 +2,10 @@
 /* IMPORT */
 
 import {parse as xml2js} from 'fast-xml-parser';
-import {AttachmentMetadata, NoteMetadata, Content} from '../../types';
 import Utils from '../../utils';
+import type {AttachmentMetadata, NoteMetadata, Content} from '../../types';
 import {AbstractProvider, AbstractNote, AbstractAttachment} from '../abstract';
-import {AttachmentRaw, NoteRaw} from './types';
+import type {AttachmentRaw, NoteRaw} from './types';
 
 /* MAIN */
 

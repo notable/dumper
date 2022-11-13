@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {Source, Options} from './types';
 import Config from './config';
 import {Boostnote, Enex, HTML, Markdown} from './providers';
 import Utils from './utils';
+import type {Source, Options} from './types';
 
 /* MAIN */
 

@@ -7,4 +7,4 @@ type NoteRaw = any;
 
 /* EXPORT */
 
-export {AttachmentRaw, NoteRaw};
+export type {AttachmentRaw, NoteRaw};

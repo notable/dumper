@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {Options} from '@notable/html2markdown';
+import type {Options} from 'html2markdown';
 
 /* MAIN */
 

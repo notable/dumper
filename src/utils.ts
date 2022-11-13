@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import html2markdown from '@notable/html2markdown';
 import decodeBase64 from 'decode-base64';
-import * as fs from 'fs';
+import html2markdown from 'html2markdown';
 import mime2ext from 'mime2ext';
-import * as path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import U8 from 'uint8-encoding';
-import {Stats} from './types';
 import Config from './config';
+import type {Stats} from './types';
 
 /* MAIN */
 
@@ -44,7 +44,7 @@ const Utils = {
 
     isArray: ( value: unknown ): value is unknown[] => {
 
-      return value instanceof Array;
+      return Array.isArray ( value );
 
     },
 
@@ -80,7 +80,7 @@ const Utils = {
 
     flatten: <T> ( value: T[][] ): T[] => {
 
-      return [].concat.apply ( [], value );
+      return [].concat.apply ( [], value as any ); //TSC
 
     },
 
@@ -114,17 +114,9 @@ const Utils = {
 
     getMaxHeapSize: (): number => {
 
-      try {
+      return 2197815296; // Hard-coded for better web compatibility, source: "require ( 'v8' ).getHeapStatistics ().heap_size_limit"
 
-        return performance['memory'].jsHeapSizeLimit;
-
-      } catch {
-
-        return 2197815296; // Hard-coded for better web compatibility, source: "require ( 'v8' ).getHeapStatistics ().heap_size_limit"
-
-      }
-
-    },
+    }
 
   },
 

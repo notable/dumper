@@ -9,4 +9,4 @@ type XML = any;
 
 /* EXPORT */
 
-export {AttachmentRaw, NoteRaw};
+export type {AttachmentRaw, NoteRaw};

@@ -37,4 +37,4 @@ bower_components
 node_modules
 package-lock.json
 dist
-test/output
+output

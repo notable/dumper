@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {Stats} from 'fs';
+import type {Stats} from 'fs';
 
 /* HELPERS */
 
@@ -65,5 +65,5 @@ type Options = {
 
 /* EXPORT */
 
-export {Constructor, ConstructorWith, Promisable};
-export {DOMParser, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Content, Stats, Options};
+export type {Constructor, ConstructorWith, Promisable};
+export type {DOMParser, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Source, SourceDetails, Content, Stats, Options};

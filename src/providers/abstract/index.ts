@@ -3,9 +3,9 @@
 
 import decode from 'entities-decode';
 import sanitize from 'sanitize-basename';
-import {ConstructorWith, Promisable, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Content, Source, SourceDetails} from '../../types';
 import Config from '../../config';
 import Utils from '../../utils';
+import type {ConstructorWith, Promisable, Attachment, AttachmentMetadata, Note, NoteMetadata, Dump, Content, Source, SourceDetails} from '../../types';
 
 /* MAIN */
 

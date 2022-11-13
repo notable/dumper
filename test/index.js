@@ -1,20 +1,20 @@
 
 /* IMPORT */
 
-const argv = require ( 'minimist' )( process.argv.slice ( 2 ) );
-const diff = require ( 'test-diff' );
-const domino = require ( 'domino' );
-const fs = require ( 'fs' );
-const mkdirp = require ( 'mkdirp' );
-const path = require ( 'path' );
-const U8 = require ( 'uint8-encoding' );
-const {default: Dumper} = require ( '../dist' );
+import domino from 'domino';
+import fs from 'node:fs';
+import path from 'node:path';
+import diff from 'test-diff';
+import parseArgv from 'tiny-parse-argv';
+import U8 from 'uint8-encoding';
+import Dumper from '../dist/index.js';
 
 /* VARIABLES */
 
-const OUTPUT = path.join ( __dirname, 'output' );
-const SOURCE = path.join ( __dirname, 'source' );
-const CHECK = path.join ( __dirname, 'check' );
+const ARGV = parseArgv ();
+const OUTPUT = path.join ( process.cwd (), 'test', 'output' );
+const SOURCE = path.join ( process.cwd (), 'test', 'source' );
+const CHECK = path.join ( process.cwd (), 'test', 'check' );
 
 /* DOM PARSER */
 
@@ -26,7 +26,7 @@ class DOMParser {
 
 /* MAKE */
 
-function make ( source ) {
+const make = source => {
   return Dumper.dump ({
     DOMParser,
     source: path.join ( SOURCE, source ),
@@ -38,7 +38,7 @@ function make ( source ) {
       function replaceAttachments ( obj ) { // No point in writing the buffer in the metadata
         if ( obj.attachments ) obj.attachments = obj.attachments.map ( attachment => attachment.metadata.name );
       }
-      mkdirp.sync ( path.join ( OUTPUT, source ) );
+      fs.mkdirSync ( path.join ( OUTPUT, source ), { recursive: true } );
       fs.writeFileSync ( path.join ( OUTPUT, source, `${note.metadata.title}.md` ), `${U8.decode ( note.content )}\n` );
       const noteMetadata = { ...note.metadata };
       replaceAttachments ( noteMetadata );
@@ -51,14 +51,14 @@ function make ( source ) {
       });
     }
   })
-}
+};
 
 /* DIFF */
 
 process.env.IS_TEST = true;
 
-const GLOB_PROVIDER = argv.provider ? `${argv.provider}` : '*';
-const GLOB_FILE = argv.file ? `${argv.file}` : '*';
+const GLOB_PROVIDER = ARGV.provider ? `${ARGV.provider}` : '*';
+const GLOB_FILE = ARGV.file ? `${ARGV.file}` : '*';
 
 diff ({
   source: {

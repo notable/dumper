@@ -7,4 +7,4 @@ type NoteRaw = Uint8Array;
 
 /* EXPORT */
 
-export {AttachmentRaw, NoteRaw};
+export type {AttachmentRaw, NoteRaw};

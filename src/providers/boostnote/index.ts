@@ -2,11 +2,12 @@
 /* IMPORT */
 
 import cson2json from 'cson2json';
-import * as path from 'path';
-import {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../../types';
+import path from 'node:path';
+import process from 'node:process';
 import Utils from '../../utils';
+import type {AttachmentMetadata, NoteMetadata, Content, SourceDetails} from '../../types';
 import {AbstractProvider, AbstractNote, AbstractAttachment} from '../abstract';
-import {AttachmentRaw, NoteRaw} from './types';
+import type {AttachmentRaw, NoteRaw} from './types';
 
 /* MAIN */
 
@@ -50,7 +51,7 @@ class BoostnoteNote extends AbstractNote<NoteRaw, AttachmentRaw> {
     if ( !details.filePath ) return [];
 
     const attachmentsLinks = note.content ? Utils.lang.matchAll ( note.content, /\]\(:storage\/([^)]+)\)/gi ) : [];
-    const attachmentsCwd = process.env.IS_TEST ? path.resolve ( details.filePath, '..', 'attachments' ) : path.resolve ( details.filePath, '..', '..', 'attachments' );
+    const attachmentsCwd = process.env['IS_TEST'] ? path.resolve ( details.filePath, '..', 'attachments' ) : path.resolve ( details.filePath, '..', '..', 'attachments' );
     const attachmentsPaths = attachmentsLinks.map ( match => path.join ( attachmentsCwd, match[1] ) );
 
     return attachmentsPaths;

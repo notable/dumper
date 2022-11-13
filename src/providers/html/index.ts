@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {NoteMetadata, Content} from '../../types';
 import Utils from '../../utils';
+import type {NoteMetadata, Content} from '../../types';
 import {AbstractProvider, AbstractNote} from '../abstract';
-import {AttachmentRaw, NoteRaw} from './types';
+import type {AttachmentRaw, NoteRaw} from './types';
 
 /* MAIN */
 
