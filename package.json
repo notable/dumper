@@ -2,7 +2,7 @@
   "name": "@notable/dumper",
   "repository": "github:fabiospampinato/@notable/dumper",
   "description": "Library for extracting attachments, notes and metadata out of formats used by popular note-taking apps.",
-  "version": "3.1.3",
+  "version": "4.0.0",
   "type": "module",
   "main": "dist/index.js",
   "exports": "./dist/index.js",
