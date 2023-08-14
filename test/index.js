@@ -4,6 +4,7 @@
 import domino from 'domino';
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import diff from 'test-diff';
 import parseArgv from 'tiny-parse-argv';
 import U8 from 'uint8-encoding';
@@ -11,7 +12,7 @@ import Dumper from '../dist/index.js';
 
 /* VARIABLES */
 
-const ARGV = parseArgv ();
+const ARGV = parseArgv ( process.argv.slice ( 2 ) );
 const OUTPUT = path.join ( process.cwd (), 'test', 'output' );
 const SOURCE = path.join ( process.cwd (), 'test', 'source' );
 const CHECK = path.join ( process.cwd (), 'test', 'check' );
